@@ -29,8 +29,8 @@ public class ChatController {
     @EventListener(ApplicationReadyEvent.class)
     public void startPythonServices() {
         try {
-            new ProcessBuilder("python", "E:/Study_Material/Code/python_services/gpt2_service.py").start();
-            new ProcessBuilder("python", "E:/Study_Material/Code/python_services/query_gemini.py").start();
+            new ProcessBuilder("python", "E:/Study_Material/Code/rareNote/python_services/gpt2_service.py").start();
+            new ProcessBuilder("python", "E:/Study_Material/Code/rareNote/python_services/query_gemini.py").start();
             System.out.println("Python services started successfully.");
         } catch (IOException e) {
             e.printStackTrace();
