@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RareNote</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="chat-container">
+    <div id="header">
+        <h1>RareNote</h1>
+    </div>
+    <div id="chat-box">
+        <div class="bot-message">
+            use '!' at the end for notes query or '?' for AI.
+        </div>
+    </div>
+    <div id="input-container">
+        <textarea type="text" id="chat-input" placeholder="Type your note or question..."></textarea>
+        <button id="send-button">Send</button>
+    </div>
+</div>
+<script src="app.js"></script>
+<script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+<script>
+    function initTypewriter() {
+    var typed = new Typed('#chat-input', {
+     strings: ['Use ! for notes query', 'Use ? for Gemini query'],
+     typeSpeed: 80,
+     backSpeed: 75,
+     startDelay: 1000,
+     backDelay: 2000,
+     loop: !0,
+     loopcount: false,
+     cursorShow:' ',
+     showCursor:false,
+     attr:'placeholder',
+     callback: function(e){ }
+   });
+   };
+    initTypewriter();
+</script>
+</body>
+</html>
