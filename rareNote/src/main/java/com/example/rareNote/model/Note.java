@@ -23,7 +23,6 @@ public class Note {
     private Set<Tag> tags = new HashSet<>();
 
     // Getters and setters
-
     public Long getId() {
         return id;
     }
@@ -47,8 +46,6 @@ public class Note {
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
-
-    // Override equals and hashCode methods based on id
 
     @Override
     public boolean equals(Object o) {

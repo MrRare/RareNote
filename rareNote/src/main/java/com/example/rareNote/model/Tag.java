@@ -17,7 +17,6 @@ public class Tag {
     private Set<Note> notes = new HashSet<>();
 
     // Getters and setters
-
     public Long getId() {
         return id;
     }

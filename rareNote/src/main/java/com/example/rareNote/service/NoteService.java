@@ -94,20 +94,25 @@ public class NoteService {
         Set<String> tags = new HashSet<>();
         try {
             String pythonPath = "E:/Study_Material/Code/rareNote/venv/Scripts/python.exe";
-            ProcessBuilder processBuilder = new ProcessBuilder(pythonPath, "E:/Study_Material/Code/python_services/extract_tags.py", content);
+            ProcessBuilder processBuilder = new ProcessBuilder(pythonPath, "E:/Study_Material/Code/rareNote/python_services/extract_tags.py", content);
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("Error:")) {
+                    System.out.println("Error extracting tags: " + line.substring(7));
                     return null;
                 } else {
                     String[] extractedTags = line.split(",");
                     tags.addAll(Arrays.asList(extractedTags));
                 }
             }
-            process.waitFor();
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                System.out.println("Python script exited with non-zero code: " + exitCode);
+                return null;
+            }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             System.out.println("Error executing Python script: " + e.getMessage());
@@ -139,40 +144,15 @@ public class NoteService {
         return noteRepository.findAll();
     }
 
-    public Note getNoteById(Long noteId) {
-        Optional<Note> optionalNote = noteRepository.findById(noteId);
-        return optionalNote.orElse(null);
+    public Note getNoteById(Long id) {
+        return noteRepository.findById(id).orElse(null);
+    }
+
+    public List<Note> findNotesRelatedToAnyTags(Set<String> tags) {
+        return noteRepository.findNotesRelatedToAnyTags(tags);
     }
 
     public String getNoteContent(Note note) throws IOException {
         return new String(Files.readAllBytes(Paths.get(note.getFilePath())));
-    }
-
-    public List<Note> findNotesByQuery(String query) {
-        return noteRepository.findAll().stream()
-                .filter(note -> {
-                    try {
-                        String content = getNoteContent(note);
-                        return content.contains(query);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        return false;
-                    }
-                })
-                .collect(Collectors.toList());
-    }
-
-    public List<Note> findNotesRelatedToAnyTags(Set<String> tags) {
-        Set<Note> relatedNotes = new HashSet<>();
-
-        for (String tag : tags) {
-           // System.out.println("Processing tag: " + tag);
-            List<Note> notesWithTag = findNotesByQuery(tag);
-           // System.out.println("Notes with tag '" + tag + "': " + notesWithTag);
-            relatedNotes.addAll(notesWithTag);
-            ///System.out.println("Current related notes after processing tag '" + tag + "': " + relatedNotes);
-        }
-
-        return new ArrayList<>(relatedNotes);
     }
 }

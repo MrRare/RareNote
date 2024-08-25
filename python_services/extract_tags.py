@@ -1,4 +1,3 @@
-# extract_tags.py
 import sys
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 from collections import Counter

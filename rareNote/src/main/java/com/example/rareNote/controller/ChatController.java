@@ -22,10 +22,6 @@ public class ChatController {
     @Autowired
     private NoteService noteService;
 
-    public ChatController() {
-        // Constructor can remain empty or be used for other initializations if necessary
-    }
-
     @EventListener(ApplicationReadyEvent.class)
     public void startPythonServices() {
         try {
@@ -77,6 +73,7 @@ public class ChatController {
         if (relatedNotes.isEmpty()) {
             return "No related notes found for the provided tags.";
         }
+
         StringBuilder responseBuilder = new StringBuilder();
         for (Note note : relatedNotes) {
             try {
@@ -87,7 +84,9 @@ public class ChatController {
         }
 
         String combinedContent = responseBuilder.toString().trim();
-        combinedContent=handleGeminiQuery(combinedContent+" don't say anything else just answer in brief whatever the *query is, if provided text is insufficient say 'Data is insufficient but here's response enhanced by AI ' and then provide gemini response. *query='"+message+"'");
+        combinedContent = handleGeminiQuery(combinedContent +
+                " Don't say anything else, just answer in brief whatever the *query is. If the provided text is insufficient, say 'Data is insufficient but here's a response enhanced by AI' and then provide the Gemini response. *query='" + message + "'");
+
         return combinedContent.isEmpty() ? "No related notes found." : combinedContent;
     }
 
@@ -112,7 +111,7 @@ public class ChatController {
         request.put("input", message);
         try {
             RestTemplate restTemplate = new RestTemplate();
-            Map<String, String> response = restTemplate.postForObject("http://127.0.0.1:5011/query_gemini", request, Map.class);
+            Map<String, String> response = restTemplate.postForObject("http://127.0.0.1:5000/query_gemini", request, Map.class);
             return response != null ? response.get("response") : "Error processing query.";
         } catch (HttpClientErrorException e) {
             e.printStackTrace();
